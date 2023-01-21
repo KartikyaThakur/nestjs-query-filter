@@ -1,0 +1,40 @@
+{
+  "name": "dynamic-query-filter",
+  "version": "0.0.1",
+  "description": "Package to facilitate dynamic filter parameters through query parameter",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "test:cov": "jest --coverage",
+    "build": "rimraf dist && tsc",
+    "prepublish": "npm run build"
+  },
+  "keywords": [
+    "dynamic-filter",
+    "query-filter",
+    "query-params",
+    "typescript",
+    "orm",
+    "array",
+    "filter"
+  ],
+  "author": "Kartikya Thakur",
+  "license": "ISC",
+  "dependencies": {
+    "@nestjs/common": "^9.2.1",
+    "@nestjs/core": "^9.2.1",
+    "@types/node": "^18.11.18",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^4.1.1",
+    "rxjs": "^7.8.0",
+    "supertest": "^6.3.3",
+    "typescript": "^4.9.4"
+  },
+  "devDependencies": {
+    "@nestjs/platform-express": "^9.2.1",
+    "@nestjs/testing": "^9.2.1",
+    "@types/jest": "^29.2.6",
+    "ts-jest": "^29.0.5"
+  }
+}
