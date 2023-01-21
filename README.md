@@ -1,9 +1,7 @@
 # dynamic-query-filter
 
-[![npm version](https://badge.fury.io/js/%40nestjs-query%2Ffilter.svg)](https://badge.fury.io/js/%40nestjs-query%2Ffilter)
-[![Build Status](https://travis-ci.com/doug-martin/nestjs-query.svg?branch=master)](https://travis-ci.com/doug-martin/nestjs-query)
-[![Coverage Status](https://coveralls.io/repos/github/doug-martin/nestjs-query/badge.svg?branch=master)](https://coveralls.io/github/doug-martin/nestjs-query?branch=master)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm version](https://badge.fury.io/js/@kartikyathakur%2Fdynamic-query-filter.svg)](https://badge.fury.io/js/@kartikyathakur%2Fdynamic-query-filter)
+[![License: MIT](https://img.shields.io/badge/License-ISC-green.svg)](https://opensource.org/licenses/ISC)
 
 Your savior from the trivial yet time consuming task of facilitating filteration on RESTful APIs.
 This package that provides a common interface for filtering data and currently supports:
@@ -17,7 +15,7 @@ This package that provides a common interface for filtering data and currently s
 ## Installation
 
 ```bash
-npm install --save @dynamic-query-filter
+npm install --save @kartikyathakur/dynamic-query-filter
 ```
 
 ## @ORMFilters
@@ -52,13 +50,13 @@ The resulting filter will be
 ### Usage
 
 ```typescript
-import { FilterRequests, FilterRequest } from 'dynamic-query-filter';
+import { GenerateORMFilter, ORMFilter } from '@kartikyathakur/dynamic-query-filter';
 
 @Get('/users')
-async findAll(@ORMFilters() filterRequest: ORMFilter) {
-  // You can use the filterRequest to filter your data, directly passing it to mongoose
+async findAll(@GenerateORMFilter() ormFilter: ORMFilter) {
+  // You can use the ormFilter to filter your data, directly passing it to mongoose
   // For example:
-  const users = await this.userService.findAll(filterRequest);
+  const users = await this.userService.findAll(ormFilter);
   return users;
 }
 ```
@@ -95,16 +93,16 @@ The resulting predicate will be
 ### Usage
 
 ```typescript
-import { FilterRequests, FilterRequest } from 'dynamic-query-filter';
+import { GenerateArrayFilter, ArrayFilter } from '@kartikyathakur/dynamic-query-filter';
 
 @Get('/users/comparison')
-async findAll(@ArrayFilters() filterRequest: ArrayFilter) {
+async findAll(@GenerateArrayFilter() arrayFilter: ArrayFilter) {
   // The array can be hard coded or fetched from a database
   const users = await this.userService.findAll();
   // ...
   // [Any business logic that is needed to be applied before filtering]
   // ...
-  // Now you can the filterRequest to filter the data in memory
-  return users.filter(filterRequest);
+  // Now you can the arrayFilter to filter the data in memory
+  return users.filter(arrayFilter);
 }
 ```

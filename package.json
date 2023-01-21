@@ -1,6 +1,6 @@
 {
-  "name": "dynamic-query-filter",
-  "version": "0.0.1",
+  "name": "@kartikyathakur/dynamic-query-filter",
+  "version": "1.0.0",
   "description": "Package to facilitate dynamic filter parameters through query parameter",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,7 +19,7 @@
     "array",
     "filter"
   ],
-  "author": "Kartikya Thakur",
+  "author": "Kartikya Thakur <kartikyathakur@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "@nestjs/common": "^9.2.1",
