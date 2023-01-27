@@ -103,6 +103,20 @@ The resulting filter will be
 }
 ```
 
+Nested objects are also supported, let's say we want to get all users for games that were released after 2012, our requestUrl will be:
+
+```
+/users?filter.game.year=date.gte.2012
+```
+
+The resulting filter will be
+
+```json
+{
+  "game.year": { "$gte": "2012" }
+}
+```
+
 ### Sample Usage
 
 Add the decorator `@GenerateORMFilter` to the controller on which you want to apply the filters.
@@ -149,6 +163,19 @@ The resulting predicate will be
 ```typescript
 (user: User) => new RegExp('Connor').test(user.name) && user.age >= 21 && user.age < 30
 ```
+
+Nested objects are also supported, let's say we want to get all users for games that were released after 2012, our requestUrl will be:
+
+```
+/users?filter.game.year=date.gte.2012
+```
+
+The resulting predicate will be
+
+```typescript
+(user: User) => user.game.year >= 2012
+```
+
 
 ### Sample Usage
 

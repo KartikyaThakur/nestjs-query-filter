@@ -53,7 +53,7 @@ export const getFilterQueries: (context: ExecutionContext) => FilterQuery[] = (c
         queryValues.forEach(queryValue => {
           const matches = queryValue.match(filterQueryRegex);
           filterQueries.push({
-            field: key.split('.')[1],
+            field: key.split('.').slice(1).join('.'),
             type: FilterQueryType[matches[1]],
             operator: Operators[matches[2]],
             value: matches[3]
@@ -62,10 +62,10 @@ export const getFilterQueries: (context: ExecutionContext) => FilterQuery[] = (c
       } else {
         const matches = queryValues.match(filterQueryRegex);
         filterQueries.push({
-          field: key.split('.')[1],
-          type: FilterQueryType[matches[1]],
-          operator: Operators[matches[2]],
-          value: matches[3]
+            field: key.split('.').slice(1).join('.'),
+            type: FilterQueryType[matches[1]],
+            operator: Operators[matches[2]],
+            value: matches[3]
         });
       }
     });
@@ -118,16 +118,44 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
 
     if(filter.operator === Operators.in) {
         if(filter.type === FilterQueryType.string) {
+            if((filter.field as string).indexOf('.') > 0) {
+                return (arrayItem) =>
+                {
+                    let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
+                    return filter.value.split(',').some(val => val === nestedObjectValue);
+                }
+            }
             return (arrayItem) => filter.value.split(',').some(val => val === arrayItem[filter.field]);
         } else if(filter.type === FilterQueryType.number) {
+            if((filter.field as string).indexOf('.') > 0) {
+                return (arrayItem) =>
+                {
+                    let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
+                    return filter.value.split(',').map(val => Number(val)).some(val => val === nestedObjectValue);
+                }
+            }
             return (arrayItem) => filter.value.split(',').map(val => Number(val)).some(val => val === arrayItem[filter.field]);
         }
     }
 
     if(filter.operator === Operators.nin) {
         if(filter.type === FilterQueryType.string) {
+            if((filter.field as string).indexOf('.') > 0) {
+                return (arrayItem) =>
+                {
+                    let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
+                    return filter.value.split(',').every(val => val !== nestedObjectValue);
+                }
+            }
             return (arrayItem) => filter.value.split(',').every(val => val !== arrayItem[filter.field]);
         } else if(filter.type === FilterQueryType.number) {
+            if((filter.field as string).indexOf('.') > 0) {
+                return (arrayItem) =>
+                {
+                    let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
+                    return filter.value.split(',').map(val => Number(val)).every(val => val !== nestedObjectValue);
+                }
+            }
             return (arrayItem) => filter.value.split(',').map(val => Number(val)).every(val => val !== arrayItem[filter.field]);
         }
     }
@@ -140,41 +168,116 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
     // filter.operator === Operators.eq
     if(filter.operator === Operators.eq) {
         if(filter.type === FilterQueryType.date) {
-            return (arrayItem) => (value as Date).getTime() === arrayItem[filter.field].getTime();
+            if((filter.field as string).indexOf('.') > 0) {
+                return (arrayItem) =>
+                {
+                    let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
+                    return (value as Date).getTime() === nestedObjectValue?.getTime();
+                }
+            }
+            return (arrayItem) => (value as Date).getTime() === arrayItem[filter.field]?.getTime();
         }
+        
+        if((filter.field as string).indexOf('.') > 0) {
+            return (arrayItem) =>
+            {
+                let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
+                return value === nestedObjectValue;
+            }
+        }
+        
         return (arrayItem) => value === arrayItem[filter.field];
     }
 
     // filter.operator === Operators.ne
     if(filter.operator === Operators.ne) {
         if(filter.type === FilterQueryType.date) {
-            return (arrayItem) => (value as Date).getTime() !== arrayItem[filter.field].getTime();
+            if((filter.field as string).indexOf('.') > 0) {
+                return (arrayItem) =>
+                {
+                    let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
+                    return (value as Date).getTime() !== nestedObjectValue?.getTime();
+                }
+            }
+            return (arrayItem) => (value as Date).getTime() !== arrayItem[filter.field]?.getTime();
+        }
+
+        if((filter.field as string).indexOf('.') > 0) {
+            return (arrayItem) =>
+            {
+                let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
+                return value !== nestedObjectValue;
+            }
         }
         return (arrayItem) => value !== arrayItem[filter.field];
     }
 
     // filter.operator === Operators.gt
     if(filter.operator === Operators.gt) {
+        if((filter.field as string).indexOf('.') > 0) {
+            return (arrayItem) =>
+            {
+                let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
+                return nestedObjectValue > value;
+            }
+        }
         return (arrayItem) => arrayItem[filter.field] > value;
     }
 
     // filter.operator === Operators.gte
     if(filter.operator === Operators.gte) {
+        if((filter.field as string).indexOf('.') > 0) {
+            return (arrayItem) =>
+            {
+                let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
+                return nestedObjectValue >= value;
+            }
+        }
         return (arrayItem) => arrayItem[filter.field] >= value;
     }
 
     // filter.operator === Operators.lt
     if(filter.operator === Operators.lt) {
+        if((filter.field as string).indexOf('.') > 0) {
+            return (arrayItem) =>
+            {
+                let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
+                return nestedObjectValue < value;
+            }
+        }
         return (arrayItem) => arrayItem[filter.field] < value;
     }
 
     // filter.operator === Operators.lte
     if(filter.operator === Operators.lte) {
+        if((filter.field as string).indexOf('.') > 0) {
+            return (arrayItem) =>
+            {
+                let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
+                return nestedObjectValue <= value;
+            }
+        }
         return (arrayItem) => arrayItem[filter.field] <= value;
     }
 
     // filter.operator === Operators.regex
     if(filter.operator === Operators.regex) {
+        if((filter.field as string).indexOf('.') > 0) {
+            return (arrayItem) =>
+            {
+                let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
+                return new RegExp(value as string).test(nestedObjectValue);
+            }
+        }
         return (arrayItem) => new RegExp(value as string).test(arrayItem[filter.field]);
     }
+}
+
+function getNestedObjectValue(filter: StringFilterQuery | NumberFilterQuery | BooleanFilterQuery | DateFilterQuery, arrayItem: any) {
+    const fieldNames = (filter.field as string).split('.');
+    let nestedObject = arrayItem;
+    for (let i = 0; i < fieldNames.length; i++) {
+        nestedObject = nestedObject[fieldNames[i]];
+    }
+    return nestedObject;
 }
