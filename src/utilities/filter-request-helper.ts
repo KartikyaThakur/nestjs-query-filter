@@ -102,9 +102,11 @@ export const constructORMFilter: (filter: FilterQuery) => ORMFilter = (filter: F
         || filter.operator === Operators.gte
         || filter.operator === Operators.lt
         || filter.operator === Operators.lte
-        || filter.operator === Operators.regex
         ) {
         return { [filter.field]: { [filter.operator]: value } };
+    } else if(filter.operator === Operators.regex) {
+        const regExp = new RegExp(value.toString(), 'i');
+        return { [filter.field]: { [filter.operator]: regExp } };
     }
 
     return null;

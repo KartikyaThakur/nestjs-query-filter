@@ -49,8 +49,8 @@ class FakeAppController {
    * Fake route that returns the ORMFilters
    */
   @Get('/orm-data')
-  public getORMFilters(@GenerateORMFilter() ormFilter: ORMFilter): ORMFilter {
-    return ormFilter;
+  public getORMFilters(@GenerateORMFilter() ormFilter: ORMFilter) {
+    return JSON.stringify(ormFilter);
   }
 
   /**
