@@ -106,7 +106,7 @@ export const constructORMFilter: (filter: FilterQuery) => ORMFilter = (filter: F
         return { [filter.field]: { [filter.operator]: value } };
     } else if(filter.operator === Operators.regex) {
         const regExp = new RegExp(value.toString(), 'i');
-        return { [filter.field]: { [filter.operator]: regExp } };
+        return { [filter.field]: { [filter.operator]: value } };
     }
 
     return null;

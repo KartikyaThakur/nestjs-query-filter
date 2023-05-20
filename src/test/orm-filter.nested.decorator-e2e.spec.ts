@@ -50,7 +50,7 @@ describe('E2e tests related to the ORMFilter ParamDecorator, for nested object',
   it('Filters for nested object, string contains', async () => {
     await request(app.getHttpServer())
       .get('/orm-data?filter.meta.game.name=string.regex.Syndicate').expect(200).expect(
-        JSON.stringify({ 'meta.game.name': { '$regex': /Syndicate/i } })
+        JSON.stringify({ 'meta.game.name': { '$regex': 'Syndicate' } })
       );
   });
 

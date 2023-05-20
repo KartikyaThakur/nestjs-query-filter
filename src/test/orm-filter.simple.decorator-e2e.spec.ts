@@ -56,7 +56,7 @@ describe('E2e tests related to the ORMFilter ParamDecorator', () => {
   it('Filters for string regex', async () => {
     await request(app.getHttpServer())
       .get('/orm-data?filter.name=string.regex.Ezio').expect(200).expect(
-        JSON.stringify({ name: { '$regex': /Ezio/i } })
+        JSON.stringify({ name: { '$regex': 'Ezio' } })
       );
   });
 
