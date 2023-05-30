@@ -3,4 +3,5 @@ export enum FilterQueryType {
     number = 'number',
     boolean = 'boolean',
     date = 'date',
+    array = 'array',
 }

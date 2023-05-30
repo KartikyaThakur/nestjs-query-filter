@@ -6,6 +6,9 @@ describe('E2e tests related to the ORMFilter ParamDecorator', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
+    Object.defineProperty(RegExp.prototype, "toJSON", {
+      value: RegExp.prototype.toString
+    });
     app = await createTestAppModule();
     await app.init();
   });
