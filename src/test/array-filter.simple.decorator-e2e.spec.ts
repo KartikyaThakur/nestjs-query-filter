@@ -187,6 +187,16 @@ describe('E2e tests related to the ArrayFilter ParamDecorator', () => {
       );
   });
 
+  // Test for array type filters
+  // Operators.eq
+
+  it('Filters for array equality', async () => {
+    await request(app.getHttpServer())
+      .get('/array-data?filter.tags=array.eq.1').expect(200).expect(
+        resultArray.filter((item) => item.tags.includes('1'))
+      );
+  });
+
   // Test for multiple filter types
   // filter = { name: 'Ezio Auditore', age: 20, isAlive: true, dob: '1995-07-21' }
 

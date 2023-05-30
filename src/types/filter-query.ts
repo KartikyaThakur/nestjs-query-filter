@@ -1,7 +1,7 @@
 import { FilterQueryType } from "../enums/filter-query-type.enum";
 import { Operators } from "../enums/operator.enum";
 
-export type FilterQuery = StringFilterQuery | NumberFilterQuery | BooleanFilterQuery | DateFilterQuery;
+export type FilterQuery = StringFilterQuery | NumberFilterQuery | BooleanFilterQuery | DateFilterQuery | ArrayFilterQuery;
 
 export type StringFilterQuery = {
     field: string;
@@ -29,4 +29,11 @@ export type DateFilterQuery = {
     operator: Operators.eq | Operators.ne | Operators.gt | Operators.gte | Operators.lt | Operators.lte | Operators.in | Operators.nin;
     value: string;
     type: FilterQueryType.date;
+};
+
+export type ArrayFilterQuery = {
+    field: string;
+    operator: Operators.eq;
+    value: string;
+    type: FilterQueryType.array;
 };

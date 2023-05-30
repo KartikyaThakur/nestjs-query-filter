@@ -2,7 +2,7 @@ import { ExecutionContext } from "@nestjs/common";
 import { FilterQueryType } from "../enums/filter-query-type.enum";
 import { Operators } from "../enums/operator.enum";
 import { ArrayFilter } from "../types/array-filter";
-import { BooleanFilterQuery, DateFilterQuery, FilterQuery, NumberFilterQuery, StringFilterQuery } from "../types/filter-query";
+import { ArrayFilterQuery, BooleanFilterQuery, DateFilterQuery, FilterQuery, NumberFilterQuery, StringFilterQuery } from "../types/filter-query";
 import { ORMFilter } from "../types/orm-filter";
 
 function isStringFilterQuery(filter: FilterQuery): filter is StringFilterQuery {
@@ -25,6 +25,11 @@ function isDateFilterQuery(filter: FilterQuery): filter is DateFilterQuery {
     && [Operators.eq, Operators.ne, Operators.gt, Operators.gte, Operators.lt, Operators.lte, Operators.in, Operators.nin].some(operator => operator == filter.operator);
 }
 
+function isArrayFilterQuery(filter: FilterQuery): filter is ArrayFilterQuery {
+    return filter.type === FilterQueryType.array
+    && [Operators.eq].some(operator => operator == filter.operator);
+}
+
 function getFilterQueryType(filter: FilterQuery): FilterQueryType {
     if (isStringFilterQuery(filter)) {
         return FilterQueryType.string;
@@ -34,6 +39,8 @@ function getFilterQueryType(filter: FilterQuery): FilterQueryType {
         return FilterQueryType.boolean;
     } else if (isDateFilterQuery(filter)) {
         return FilterQueryType.date;
+    } else if (isArrayFilterQuery(filter)) {
+        return FilterQueryType.array;
     }
 }
 
@@ -106,7 +113,7 @@ export const constructORMFilter: (filter: FilterQuery) => ORMFilter = (filter: F
         return { [filter.field]: { [filter.operator]: value } };
     } else if(filter.operator === Operators.regex) {
         const regExp = new RegExp(value.toString(), 'i');
-        return { [filter.field]: { [filter.operator]: value } };
+        return { [filter.field]: { [filter.operator]: regExp } };
     }
 
     return null;
@@ -115,6 +122,13 @@ export const constructORMFilter: (filter: FilterQuery) => ORMFilter = (filter: F
 export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filter: FilterQuery): ArrayFilter => {
     const filterRequestType: FilterQueryType = getFilterQueryType(filter);
     if (!filterRequestType) {
+        return null;
+    }
+
+    if(filter.type === FilterQueryType.array) {
+        if(filter.operator === Operators.eq) {
+            return (arrayItem) => arrayItem[filter.field].includes(filter.value);
+        }
         return null;
     }
 
@@ -275,7 +289,7 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
     }
 }
 
-function getNestedObjectValue(filter: StringFilterQuery | NumberFilterQuery | BooleanFilterQuery | DateFilterQuery, arrayItem: any) {
+function getNestedObjectValue(filter: StringFilterQuery | NumberFilterQuery | BooleanFilterQuery | DateFilterQuery | ArrayFilterQuery, arrayItem: any) {
     const fieldNames = (filter.field as string).split('.');
     let nestedObject = arrayItem;
     for (let i = 0; i < fieldNames.length; i++) {
