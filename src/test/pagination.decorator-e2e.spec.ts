@@ -30,7 +30,7 @@ describe('E2e tests related to the ORMFilter ParamDecorator', () => {
 
   it('Filters for string equality', async () => {
     await request(app.getHttpServer())
-      .get('/orm-data?filter.name=string.eq.Ezio%20Auditore').expect(200).expect(
+      .get('/orm-data?filter.name=string.eq.Ezio%20Auditore&skip=10&limit=20&sort=-createdAt').expect(200).expect(
         JSON.stringify({ name: { '$eq': 'Ezio Auditore' } })
       );
   });
