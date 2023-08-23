@@ -21,6 +21,15 @@ export class PaginationQuery {
         }][Symbol.iterator]();
     }
 
+    getAggregateQuery(): any[] {
+        const sortDirection = this.sort.startsWith('-') ? -1 : 1;
+        return [
+            { $skip: this.skip },
+            { $limit: this.limit },
+            { $sort: { [this.sort]: sortDirection } }
+        ];
+    }
+
     generatePaginatedResponse<T>(total: number, data: T[]): PaginatedResponse<T> {
         return {
             data: data,
