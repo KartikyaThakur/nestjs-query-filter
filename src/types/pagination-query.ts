@@ -23,10 +23,12 @@ export class PaginationQuery {
 
     getAggregateQuery(): any[] {
         const sortDirection = this.sort.startsWith('-') ? -1 : 1;
+        const sortField = this.sort.replace(/[-+]/g, '');
+
         return [
             { $skip: this.skip },
             { $limit: this.limit },
-            { $sort: { [this.sort]: sortDirection } }
+            { $sort: { [sortField]: sortDirection } }
         ];
     }
 
