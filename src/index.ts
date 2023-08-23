@@ -9,3 +9,4 @@ export * from './types/array-filter';
 // PaginationQuery
 export * from './decorators/pagination-query.decorator';
 export * from './types/pagination-query';
+export * from './types/paginated-response';
