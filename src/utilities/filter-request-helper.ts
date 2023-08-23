@@ -68,6 +68,8 @@ export const getFilterQueries: (context: ExecutionContext) => FilterQuery[] = (c
         });
       } else {
         const matches = queryValues.match(filterQueryRegex);
+        if(!matches || matches.length < 4) return;
+
         filterQueries.push({
             field: key.split('.').slice(1).join('.'),
             type: FilterQueryType[matches[1]],

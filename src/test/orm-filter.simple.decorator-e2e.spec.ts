@@ -215,4 +215,13 @@ describe('E2e tests related to the ORMFilter ParamDecorator', () => {
       );
   });
 
+    // Test for bad input for filter
+
+    it('Filters for bad input for filter', async () => {
+      await request(app.getHttpServer())
+        .get('/orm-data?filter.name=string.eq').expect(200).expect(
+          {}
+        );
+    });
+  
 });
