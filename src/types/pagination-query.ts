@@ -1,3 +1,4 @@
+import { SortDirection } from "../enums/sort-direction.enum";
 import { PaginatedResponse } from "./paginated-response";
 
 export class PaginationQuery {
@@ -43,4 +44,37 @@ export class PaginationQuery {
             }
         };
     }
+
+    getPaginatedSortedArray<T>(data: T[]): T[] {
+        let sort = this.sort.trim();
+
+        let sortDirection = SortDirection.ASC;
+        if (sort[0] === '+' || sort[0] === '-') {
+            sortDirection = sort[0] === '-' ? SortDirection.DESC : SortDirection.ASC;
+            sort = sort.slice(1);
+        }
+
+        const sortFieldType = typeof data[0][sort];
+        if (sortFieldType !== 'string' && sortFieldType !== 'number') {
+            console.error('Invalid sort field, must be a string or number type. Returning unsorted data.');
+            return data.slice(this.skip, this.skip + this.limit);
+        }
+
+        const compareFunction = sortFieldType === 'number'
+            ? this.numberSortFunction(sortDirection, sort)
+            : this.stringSortFunction(sortDirection, sort);
+
+        data.sort(compareFunction);
+
+        return data.slice(this.skip, this.skip + this.limit);
+    }
+
+    private numberSortFunction(sortDirection: SortDirection, sort: string) {
+        return (a, b) => sortDirection === SortDirection.ASC ? a[sort] - b[sort] : b[sort] - a[sort];
+    }
+
+    private stringSortFunction(sortDirection: SortDirection, sort: string) {
+        return (a, b) => sortDirection === SortDirection.ASC ? a[sort].localeCompare(b[sort]) : b[sort].localeCompare(a[sort]);
+    }
+
 };
