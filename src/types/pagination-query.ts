@@ -46,6 +46,14 @@ export class PaginationQuery {
     }
 
     getPaginatedSortedArray<T>(data: T[]): T[] {
+        if (data.length === 0) {
+            return data;
+        } else {
+            return this.paginateArray(data);
+        }
+    }
+
+    private paginateArray<T>(data: T[]): T[] {
         let sort = this.sort.trim();
 
         let sortDirection = SortDirection.ASC;
