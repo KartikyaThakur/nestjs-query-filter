@@ -22,7 +22,7 @@ class SamplePerson {
   isAlive: boolean;
   dob: Date;
   meta: {
-    game: {
+    game?: {
       name: string,
       releasedOn: Date,
       year: number
@@ -41,14 +41,21 @@ class SamplePerson {
 class FakeAppController {
 
   sampleArrayData: SamplePerson[] = sampleArrayData.map((person: SamplePerson) => {
-    return {
-      ...person,
-      dob: new Date(person.dob),
-      meta: {
-        game: {
-          ...person.meta.game,
-          releasedOn: new Date(person.meta.game.releasedOn)
+    if(person.meta.game) {
+      return {
+        ...person,
+        dob: new Date(person.dob),
+        meta: {
+          game: {
+            ...person.meta.game,
+            releasedOn: new Date(person.meta.game.releasedOn)
+          }
         }
+      }
+    } else {
+      return {
+        ...person,
+        dob: new Date(person.dob)
       }
     }
   });
@@ -104,5 +111,5 @@ export const sampleArrayData: SamplePerson[] = [
   { _id: 10, name: 'Jacob Frye', age: 110, isAlive: false, dob: new Date('1990-01-01'), meta: { game: { name: 'Assassins Creed Syndicate', releasedOn: new Date('2015-01-01'), year: 2015}}, tags: ['10', '2015']},
   { _id: 11, name: 'Evie Frye', age: 120, isAlive: true, dob: new Date('1989-01-01'), meta: { game: { name: 'Assassins Creed Syndicate', releasedOn: new Date('2015-01-01'), year: 2015}}, tags: ['11', '2015']},
   { _id: 12, name: 'Bayek of Siwa', age: 130, isAlive: false, dob: new Date('1988-01-01'), meta: { game: { name: 'Assassins Creed Origins', releasedOn: new Date('2017-01-01'), year: 2017}}, tags: ['12', '2017']},
-  { _id: 13, name: 'Aya', age: 140, isAlive: true, dob: new Date('1987-01-01'), meta: { game: { name: 'Assassins Creed Origins', releasedOn: new Date('2017-01-01'), year: 2017}}, tags: ['13', '2017']},
+  { _id: 13, name: 'Aya', age: 140, isAlive: true, dob: new Date('1987-01-01'), meta: { }, tags: ['13', '2017']},
 ];

@@ -11,7 +11,9 @@ describe('E2e tests related to the ArrayFilter ParamDecorator', () => {
     resultArray = sampleArrayData;
     resultArray.map((item) => {
       item.dob = item.dob.toISOString();
-      item.meta.game.releasedOn = item.meta.game.releasedOn.toISOString();
+      if(item.meta.game?.releasedOn) {
+        item.meta.game.releasedOn = item.meta.game.releasedOn.toISOString();
+      }
     });
     await app.init();
   });

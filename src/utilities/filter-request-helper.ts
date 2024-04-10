@@ -140,7 +140,7 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
                 return (arrayItem) =>
                 {
                     let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
-                    return filter.value.split(',').some(val => val === nestedObjectValue);
+                    return nestedObjectValue && filter.value.split(',').some(val => val === nestedObjectValue);
                 }
             }
             return (arrayItem) => filter.value.split(',').some(val => val === arrayItem[filter.field]);
@@ -149,7 +149,7 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
                 return (arrayItem) =>
                 {
                     let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
-                    return filter.value.split(',').map(val => Number(val)).some(val => val === nestedObjectValue);
+                    return nestedObjectValue && filter.value.split(',').map(val => Number(val)).some(val => val === nestedObjectValue);
                 }
             }
             return (arrayItem) => filter.value.split(',').map(val => Number(val)).some(val => val === arrayItem[filter.field]);
@@ -162,7 +162,7 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
                 return (arrayItem) =>
                 {
                     let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
-                    return filter.value.split(',').every(val => val !== nestedObjectValue);
+                    return nestedObjectValue && filter.value.split(',').every(val => val !== nestedObjectValue);
                 }
             }
             return (arrayItem) => filter.value.split(',').every(val => val !== arrayItem[filter.field]);
@@ -171,7 +171,7 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
                 return (arrayItem) =>
                 {
                     let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
-                    return filter.value.split(',').map(val => Number(val)).every(val => val !== nestedObjectValue);
+                    return nestedObjectValue && filter.value.split(',').map(val => Number(val)).every(val => val !== nestedObjectValue);
                 }
             }
             return (arrayItem) => filter.value.split(',').map(val => Number(val)).every(val => val !== arrayItem[filter.field]);
@@ -200,7 +200,7 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
             return (arrayItem) =>
             {
                 let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
-                return value === nestedObjectValue;
+                return nestedObjectValue && value === nestedObjectValue;
             }
         }
         
@@ -214,7 +214,7 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
                 return (arrayItem) =>
                 {
                     let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
-                    return (value as Date).getTime() !== nestedObjectValue?.getTime();
+                    return nestedObjectValue && (value as Date).getTime() !== nestedObjectValue?.getTime();
                 }
             }
             return (arrayItem) => (value as Date).getTime() !== arrayItem[filter.field]?.getTime();
@@ -224,7 +224,7 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
             return (arrayItem) =>
             {
                 let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
-                return value !== nestedObjectValue;
+                return nestedObjectValue && value !== nestedObjectValue;
             }
         }
         return (arrayItem) => value !== arrayItem[filter.field];
@@ -236,7 +236,7 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
             return (arrayItem) =>
             {
                 let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
-                return nestedObjectValue > value;
+                return nestedObjectValue && nestedObjectValue > value;
             }
         }
         return (arrayItem) => arrayItem[filter.field] > value;
@@ -248,7 +248,7 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
             return (arrayItem) =>
             {
                 let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
-                return nestedObjectValue >= value;
+                return nestedObjectValue && nestedObjectValue >= value;
             }
         }
         return (arrayItem) => arrayItem[filter.field] >= value;
@@ -260,7 +260,7 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
             return (arrayItem) =>
             {
                 let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
-                return nestedObjectValue < value;
+                return nestedObjectValue && nestedObjectValue < value;
             }
         }
         return (arrayItem) => arrayItem[filter.field] < value;
@@ -272,7 +272,7 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
             return (arrayItem) =>
             {
                 let nestedObjectValue = getNestedObjectValue(filter, arrayItem);
-                return nestedObjectValue <= value;
+                return nestedObjectValue && nestedObjectValue <= value;
             }
         }
         return (arrayItem) => arrayItem[filter.field] <= value;
@@ -295,6 +295,9 @@ function getNestedObjectValue(filter: StringFilterQuery | NumberFilterQuery | Bo
     const fieldNames = (filter.field as string).split('.');
     let nestedObject = arrayItem;
     for (let i = 0; i < fieldNames.length; i++) {
+        if (!nestedObject[fieldNames[i]]) {
+            return null;
+        }
         nestedObject = nestedObject[fieldNames[i]];
     }
     return nestedObject;
