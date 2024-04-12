@@ -287,7 +287,7 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
                 return new RegExp(value as string).test(nestedObjectValue);
             }
         }
-        return (arrayItem) => new RegExp(value as string).test(arrayItem[filter.field]);
+        return (arrayItem) => new RegExp(value as string, 'i').test(arrayItem[filter.field]);
     }
 }
 

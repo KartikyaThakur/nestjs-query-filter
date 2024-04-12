@@ -68,6 +68,13 @@ describe('E2e tests related to the ArrayFilter ParamDecorator', () => {
       );
   });
 
+  it('Filters for string regex, case-insensitive', async () => {
+    await request(app.getHttpServer())
+      .get('/array-data?filter.name=string.regex.ezio').expect(200).expect(
+        resultArray.filter((item) => item.name.match(/Ezio/))
+      );
+  });
+
   // Test for number type filters
   // Operators.eq, Operators.ne, Operators.gt, Operators.gte, Operators.lt, Operators.lte, Operators.in, Operators.nin
 
