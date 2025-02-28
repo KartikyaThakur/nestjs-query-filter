@@ -196,6 +196,37 @@ describe('E2e tests related to the ArrayFilter ParamDecorator', () => {
       );
   });
 
+  // Test for boolean type filters
+  // Operators.eq, Operators.ne
+
+  it('Filters for truthy boolean equality', async () => {
+    await request(app.getHttpServer())
+      .get('/array-data?filter.isAlive=boolean.eq.true').expect(200).expect(
+        resultArray.filter((item) => item.isAlive === true)
+      );
+  });
+  
+  it('Filters for truthy boolean inequality', async () => {
+    await request(app.getHttpServer())
+      .get('/array-data?filter.isAlive=boolean.ne.true').expect(200).expect(
+        resultArray.filter((item) => item.isAlive !== true)
+      );
+  });
+
+  it('Filters for falsy boolean equality', async () => {
+    await request(app.getHttpServer())
+      .get('/array-data?filter.isAlive=boolean.eq.false').expect(200).expect(
+        resultArray.filter((item) => item.isAlive === false)
+      );
+  });
+
+  it('Filters for falsy boolean inequality', async () => {
+    await request(app.getHttpServer())
+      .get('/array-data?filter.isAlive=boolean.ne.false').expect(200).expect(
+        resultArray.filter((item) => item.isAlive !== false)
+      );
+  });
+
   // Test for array type filters
   // Operators.eq
 
