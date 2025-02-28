@@ -44,42 +44,38 @@ function getFilterQueryType(filter: FilterQuery): FilterQueryType {
     }
 }
 
-export const getFilterQueries: (context: ExecutionContext) => FilterQuery[] = (context: ExecutionContext) => {
+export const getFilterQueries = (context: ExecutionContext): FilterQuery[] => {
+    // Extract the HTTP request object
     const request = context.switchToHttp().getRequest();
-    // Use regex to get the filter query parameters
-    const rawfilterQueryKeys = Object.keys(request.query).filter(key => key.match(/^filter\..+$/));
-  
-    // Given that filter query is in the form of filter.[field]=[type].[operator].[value], we can use the following regex to extract the field, type, operator and value
-    const filterQueryRegex = /^(.*)\.(.*)\.(.*)$/;
-    const filterQueries: FilterQuery[] = [];
-    rawfilterQueryKeys.forEach(key => {
-  
-      const queryValues: string | string[] = request.query[key];
-      // If the same key is present more than once, we need to handle all the values
-      if (Array.isArray(queryValues)) {
-        queryValues.forEach(queryValue => {
-          const matches = queryValue.match(filterQueryRegex);
-          filterQueries.push({
-            field: key.split('.').slice(1).join('.'),
-            type: FilterQueryType[matches[1]],
-            operator: Operators[matches[2]],
-            value: matches[3]
-          });
-        });
-      } else {
-        const matches = queryValues.match(filterQueryRegex);
-        if(!matches || matches.length < 4) return;
 
-        filterQueries.push({
-            field: key.split('.').slice(1).join('.'),
-            type: FilterQueryType[matches[1]],
-            operator: Operators[matches[2]],
-            value: matches[3]
+    return Object.keys(request.query)
+        // Filter only keys that start with "filter."
+        .filter(key => key.startsWith("filter."))
+        .flatMap(key => {
+            // Extract the field name by removing "filter." prefix
+            const field = key.slice(7);
+            const queryValues = request.query[key];
+
+            // Ensure the query values are processed as an array
+            return (Array.isArray(queryValues) ? queryValues : [queryValues])
+                .map(value => {
+                    // Split the value into type, operator, and the rest of the value
+                    const [type, operator, ...rest] = value.split('.');
+
+                    // Validate that type, operator, and value exist
+                    if (!type || !operator || rest.length === 0) return null;
+
+                    return {
+                        field,
+                        type: FilterQueryType[type],  // Convert type to its enum
+                        operator: Operators[operator], // Convert operator to its enum
+                        value: rest.join('.'), // Join the remaining value parts
+                    };
+                })
+                // Remove any null values from the resulting array
+                .filter(Boolean) as FilterQuery[];
         });
-      }
-    });
-    return filterQueries;
-}
+};
 
 export const constructORMFilter: (filter: FilterQuery) => ORMFilter = (filter: FilterQuery): ORMFilter => {
     const filterRequestType: FilterQueryType = getFilterQueryType(filter);
