@@ -167,6 +167,37 @@ describe('E2e tests related to the ORMFilter ParamDecorator', () => {
       );
   });
 
+  // Test for boolean type filters
+  // Operators.eq, Operators.ne
+
+  it('Filters for truthy boolean equality', async () => {
+    await request(app.getHttpServer())
+      .get('/orm-data?filter.isAlive=boolean.eq.true').expect(200).expect(
+        JSON.stringify({ isAlive: { '$eq': true } })
+      );
+  });
+
+  it('Filters for truthy boolean inequality', async () => {
+    await request(app.getHttpServer())
+      .get('/orm-data?filter.isAlive=boolean.ne.true').expect(200).expect(
+        JSON.stringify({ isAlive: { '$ne': true } })
+      );
+  });
+
+  it('Filters for falsy boolean equality', async () => {
+    await request(app.getHttpServer())
+      .get('/orm-data?filter.isAlive=boolean.eq.false').expect(200).expect(
+        JSON.stringify({ isAlive: { '$eq': false } })
+      );
+  });
+
+  it('Filters for falsy boolean inequality', async () => {
+    await request(app.getHttpServer())
+      .get('/orm-data?filter.isAlive=boolean.ne.false').expect(200).expect(
+        JSON.stringify({ isAlive: { '$ne': false } })
+      );
+  });
+
   // Test for multiple filter types
   // filter = { name: 'Ezio Auditore', age: 20, isAlive: true, dob: '1995-07-21' }
 
