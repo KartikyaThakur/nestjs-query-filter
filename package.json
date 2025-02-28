@@ -1,6 +1,6 @@
 {
   "name": "@kartikyathakur/nestjs-query-filter",
-  "version": "1.1.2",
+  "version": "1.1.88",
   "repository": "KartikyaThakur/nestjs-query-filter",
   "description": "Package providing decorators for NestJS to easily filter data thorugh query parameters",
   "main": "dist/index.js",
@@ -33,9 +33,12 @@
   },
   "devDependencies": {
     "@nestjs/core": "^9.2.1",
+    "@nestjs/mongoose": "^10.0.1",
     "@nestjs/platform-express": "^9.2.1",
     "@nestjs/testing": "^9.2.1",
     "@types/jest": "^29.2.6",
+    "mongodb-memory-server": "^8.15.1",
+    "mongoose": "^7.4.3",
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.5"
   }

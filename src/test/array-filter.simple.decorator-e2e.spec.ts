@@ -11,7 +11,9 @@ describe('E2e tests related to the ArrayFilter ParamDecorator', () => {
     resultArray = sampleArrayData;
     resultArray.map((item) => {
       item.dob = item.dob.toISOString();
-      item.meta.game.releasedOn = item.meta.game.releasedOn.toISOString();
+      if(item.meta.game?.releasedOn) {
+        item.meta.game.releasedOn = item.meta.game.releasedOn.toISOString();
+      }
     });
     await app.init();
   });
@@ -62,6 +64,13 @@ describe('E2e tests related to the ArrayFilter ParamDecorator', () => {
   it('Filters for string regex', async () => {
     await request(app.getHttpServer())
       .get('/array-data?filter.name=string.regex.Ezio').expect(200).expect(
+        resultArray.filter((item) => item.name.match(/Ezio/))
+      );
+  });
+
+  it('Filters for string regex, case-insensitive', async () => {
+    await request(app.getHttpServer())
+      .get('/array-data?filter.name=string.regex.ezio').expect(200).expect(
         resultArray.filter((item) => item.name.match(/Ezio/))
       );
   });
