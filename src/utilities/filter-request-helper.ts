@@ -102,7 +102,7 @@ export const constructORMFilter: (filter: FilterQuery) => ORMFilter = (filter: F
 
     const value: string | number | boolean | Date = filterRequestType === FilterQueryType.date ? new Date(filter.value.toString()) :
         filterRequestType === FilterQueryType.number ? Number(filter.value) :
-            filterRequestType === FilterQueryType.boolean ? Boolean(filter.value) :
+            filterRequestType === FilterQueryType.boolean ? filter.value.toLocaleLowerCase() === 'true' :
                 filter.value;
     
     if(filter.operator === Operators.eq
@@ -180,7 +180,7 @@ export const constructArrayFilter: (filter: FilterQuery) => ArrayFilter = (filte
 
     const value: string | number | boolean | Date = filterRequestType === FilterQueryType.date ? new Date(filter.value.toString()) :
         filterRequestType === FilterQueryType.number ? Number(filter.value) :
-            filterRequestType === FilterQueryType.boolean ? Boolean(filter.value) :
+            filterRequestType === FilterQueryType.boolean ? filter.value.toLocaleLowerCase() === 'true' :
                 filter.value;
     
     // filter.operator === Operators.eq
