@@ -65,7 +65,6 @@ class FakeAppController {
    */
   @Get('/orm-data')
   public getORMFilters(@GenerateORMFilter() ormFilter: ORMFilter, @PaginationOption() paginationOption: PaginationQuery) {
-    console.log(paginationOption);
     return JSON.stringify(ormFilter);
   }
 
