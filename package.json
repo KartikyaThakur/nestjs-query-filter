@@ -1,6 +1,6 @@
 {
   "name": "@kartikyathakur/nestjs-query-filter",
-  "version": "1.1.9",
+  "version": "1.1.91",
   "repository": "KartikyaThakur/nestjs-query-filter",
   "description": "Package providing decorators for NestJS to easily filter data thorugh query parameters",
   "main": "dist/index.js",
@@ -9,7 +9,8 @@
     "test": "jest",
     "test:cov": "jest --coverage",
     "build": "rimraf dist && tsc",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "publish": "npm run prepublish && npm publish"
   },
   "keywords": [
     "nestjs",
